@@ -61,7 +61,7 @@ spec:
           #              key: DB_HOST
         ports:
         - containerPort:  8080
-          name:  my-drupal-deployment
+          name: drupal-http
       restartPolicy: Always
 ---
 

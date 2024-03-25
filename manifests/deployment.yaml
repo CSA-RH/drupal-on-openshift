@@ -1,0 +1,67 @@
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  my-drupal-deployment
+  namespace: my-drupal-ns
+  labels:
+    app:  my-drupal-deployment
+spec:
+  selector:
+    matchLabels:
+      app: my-drupal-deployment
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  my-drupal-deployment
+    spec:
+      # initContainers:
+        # Init containers are exactly like regular containers, except:
+          # - Init containers always run to completion.
+          # - Each init container must complete successfully before the next one starts.
+      containers:
+      - name:  my-drupal-deployment
+        image:  drupal
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 2000m
+            memory: 2000Mi
+              #        livenessProbe:
+              #          tcpSocket:
+              #            port: 8080
+              #          initialDelaySeconds: 5
+              #          timeoutSeconds: 5
+              #          successThreshold: 1
+              #          failureThreshold: 3
+              #          periodSeconds: 10
+              #        readinessProbe:
+              #          httpGet:
+              #            path: /_status/healthz
+              #            port: 80
+              #          initialDelaySeconds: 5
+              #          timeoutSeconds: 2
+              #          successThreshold: 1
+              #          failureThreshold: 3
+              #          periodSeconds: 10
+        env:
+          #        - name: DB_HOST
+          #          valueFrom:
+          #            configMapKeyRef:
+          #              name: my-drupal-deployment
+          #              key: DB_HOST
+        ports:
+        - containerPort:  8080
+          name:  my-drupal-deployment
+      restartPolicy: Always
+---
+
